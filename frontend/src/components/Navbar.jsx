@@ -38,6 +38,11 @@ const Navbar = () => {
           width: 100px;
           height: auto;
           padding: 5px;
+          margin-left:20px;
+        }
+
+        .relative{
+          margin-right:20px;
         }
       `}</style>
 

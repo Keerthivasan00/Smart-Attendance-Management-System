@@ -53,9 +53,10 @@ function ManagerLeaveApply() {
   margin: auto;
 }
 
-.leave-container h2 {
+.leave-container h1 {
   text-align: center;
   margin-bottom: 20px;
+  
 }
 
 .leave-form {
@@ -117,12 +118,13 @@ function ManagerLeaveApply() {
   cursor: not-allowed;
 }
 
+
         `
       }
     </style>
-    <Layout>
+    <Layout><br />
       <div className="leave-container">
-        <h2>Manager Leave Application</h2>
+        <h2 className="h1">Manager Leave Application</h2><br />
 
         <form className="leave-form" onSubmit={handleSubmit}>
 
