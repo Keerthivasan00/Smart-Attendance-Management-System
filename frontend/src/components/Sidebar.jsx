@@ -20,82 +20,116 @@ function Sidebar() {
   const [open, setOpen] = useState();
   const navigate = useNavigate();
 
-  // IMPORTANT: Get the role from login
   const role = localStorage.getItem("role");  
-  // Example: "manager", "hod", "staff", "student"
 
-  // ---------- MENUS BASED ON ROLE ----------
+  const dashboardPath = {
+    manager: "/manager/dashboard",
+    hod: "/hod/dashboard",
+    staff: "/staff/dashboard",
+    student: "/student/dashboard",
+    admin:"/admin/dashboard"
+  }[role];
+
+
   const menuItems = {
-  manager: [
-    // { icon: <Home size={30} />, label: "Dashboard", path: "/manager/dashboard" },
-    { icon: <Users size={30} />, label: "Add Student", path:"/manager/add-students" },
-    { icon: <PlusCircle size={30} />, label: "Add Staff", path:"/manager/add-staffs" },
-    { icon: <Edit size={30} />, label: "Edit Student", path:"/manager/edit-students" },
-    { icon: <Edit size={30} />, label: "Edit Staff", path:"/manager/edit-staffs" },
-    { icon: <Calendar size={30} />, label: "Apply Leave", path:"/manager/apply-leave" }
-  ],
+    admin:[
+      { icon: <Users size={30} />, label: "Add Student", path: "/manager/add-students" },
+      { icon: <PlusCircle size={30} />, label: "Add Staff", path: "/manager/add-staffs" },
+      { icon: <Edit size={30} />, label: "Edit Student", path: "/manager/edit-students" },
+      { icon: <Edit size={30} />, label: "Edit Staff", path: "/manager/edit-staffs" },
+      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/manager/apply-leave" }
+    ],
 
-  hod: [
-    // { icon: <Home size={30} />, label: "Dashboard", path: "/hod/dashboard" },
-    { icon: <Users size={30} />, label: "Assign Staff to Class", path:"/hod/assign-staff" },
-    { icon: <ClipboardList size={30} />, label: "Approve Staff Leave", path:"/hod/leave-approve" },
-    { icon: <Calendar size={30} />, label: "Apply Leave", path:"/hod/apply-leave" }
-  ],
+    manager: [
+      { icon: <Users size={30} />, label: "Add Student", path: "/manager/add-students" },
+      { icon: <PlusCircle size={30} />, label: "Add Staff", path: "/manager/add-staffs" },
+      { icon: <Edit size={30} />, label: "Edit Student", path: "/manager/edit-students" },
+      { icon: <Edit size={30} />, label: "Edit Staff", path: "/manager/edit-staffs" },
+      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/manager/apply-leave" }
+    ],
 
-  staff: [
-    // { icon: <Home size={30} />, label: "Dashboard", path: "/staff/dashboard" },
-    { icon: <UserCheck size={30} />, label: "Approve Student Leave", path:"/staff/approve-leave" },
-    { icon: <Calendar size={30} />, label: "Apply Leave to HOD", path:"/staff/apply-leave" },
-    { icon: <QrCode size={30} />, label: "Generate OTP", path:"/staff/generate-otp" },
-    { icon: <BarChart2 size={30} />, label: "View Attendance", path:"/staff/view-attendance" }
-  ],
+    hod: [
+      { icon: <Users size={30} />, label: "Assign Staff to Class", path: "/hod/assign-staff" },
+      { icon: <ClipboardList size={30} />, label: "Approve Staff Leave", path: "/hod/leave-approve" },
+      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/hod/apply-leave" }
+    ],
 
-  student: [
-    // { icon: <Home size={30} />, label: "Dashboard", path: "/student/dashboard" },
-    { icon: <Calendar size={30} />, label: "Apply Leave", path:"/student/leave-apply" },
-    { icon: <QrCode size={30} />, label: "Mark Attendance", path:"/student/mark-attendance" },
-    { icon: <BarChart2 size={30} />, label: "Attendance %", path:"/student/view-attendance" },
-    { icon: <Table2 size={30} />, label: "View Time Table", path:"/student/view-timetable" }
-  ]
-};
+    staff: [
+      { icon: <UserCheck size={30} />, label: "Approve Student Leave", path: "/staff/approve-leave" },
+      { icon: <Calendar size={30} />, label: "Apply Leave to HOD", path: "/staff/apply-leave" },
+      { icon: <QrCode size={30} />, label: "Generate OTP", path: "/staff/generate-otp" },
+      { icon: <BarChart2 size={30} />, label: "View Attendance", path: "/staff/view-attendance" }
+    ],
 
-  // Select menu based on role
+    student: [
+      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/student/leave-apply" },
+      { icon: <QrCode size={30} />, label: "Mark Attendance", path: "/student/mark-attendance" },
+      { icon: <BarChart2 size={30} />, label: "Attendance %", path: "/student/view-attendance" },
+      { icon: <Table2 size={30} />, label: "View Time Table", path: "/student/view-timetable" }
+    ]
+  };
+
   const items = menuItems[role] || [];
 
   return (
-    <div className="flex h-screen bg-gray-100 ">
+    <>
+    <style>
+{`
+  .sidebar-icon {
+    display: flex;
+    justify-content: center;
+  }
 
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;  /* spacing between each menu item */
+  }
+
+  .dash{
+    font-weight:bold;
+    }
+`}
+</style>
+    <div className="flex h-screen bg-gray-100">
       <div
         className={`bg-blue-700 text-white p-6 pt-10 ${
           open ? "w-64" : "w-20"
         }`}
       >
-
-        {/* Toggle Button */}
         <button
           onClick={() => setOpen(!open)}
           className="absolute top-6 left-4 text-white"
         >
           {open ? <X size={40} /> : <ArrowRight size={40} />}
-        </button><br /><br /><br /><br />
+        </button>
 
-        {/* DYNAMIC ROLE-BASED MENU */}
-        <nav className="flex flex-col space-y-4 mt-20 font-medium gap-4">
-  {items.map((item, index) => (
-    <button
-      key={index}
-      onClick={() => navigate(item.path)}
-      className="flex items-center hover:bg-blue-600 p-3 rounded-xl gap-3"
-    >
-      {item.icon}
-      {open && <span>{item.label}</span>}
-    </button>
-  ))}
-</nav>
+        <br /><br /><br /><br />
+
+        {/* 🔥 UNIVERSAL "GO TO DASHBOARD" BUTTON */}
+        <button
+          onClick={() => navigate(dashboardPath)}
+          className="flex items-center w-full hover:bg-blue-600 p-3 rounded-xl gap-3 mb-5">
+          <div className="sidebar-icon"><Home size={30} /></div>
+          {open && <span className="dash">Dashboard</span>}
+        </button>
+
+      
+        <nav className="sidebar-menu mt-5 font-medium">
+          {items.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => navigate(item.path)}
+              className="flex items-center hover:bg-blue-600 p-3 rounded-xl gap-3 mb-4">
+              <div className="sidebar-icon">{item.icon}</div>
+              {open && <span>{item.label}</span>}
+            </button>
+          ))}
+        </nav>
 
       </div>
-
     </div>
+    </>
   );
 }
 

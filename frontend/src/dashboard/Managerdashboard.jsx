@@ -4,11 +4,11 @@ import "../CSS/Managerdashboard.css";
 import student from "../assets/student.png";
 import staff from "../assets/staff.png";
 import department from "../assets/dept.png";
-import AddStudent from "../pages/AddStudent";
-import ManagerSidebar from "../components/Sidebar";
+import Layout from "../components/Layout";
 
 const ManagerDashboard = () => {
   return (
+   
      <div className="dashboard-container">
     <h1 className="dashboard-title">Manager Dashboard</h1>
     <p className="dashboard-subtext">
@@ -42,11 +42,15 @@ const ManagerDashboard = () => {
     </div>
     <img src={department} alt="departments" className="card-icon" />
   </div>
+  </div>
 
-</div>
+    <div>
+    
+    </div>
 
     </div>
-    // </div>
+
+    
   );
 };
 

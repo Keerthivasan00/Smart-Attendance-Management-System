@@ -5,6 +5,7 @@ import ManagerDashboard from '../dashboard/Managerdashboard'
 import HODDashboard from '../dashboard/Hoddashboard'
 import StaffDashboard from '../dashboard/Staffdashboard'
 import StudentDashboard from '../dashboard/Studentdashboard'
+import Admindashboard from '../dashboard/Admindashboard'
 
 const Dashboard = () => {
 
@@ -20,33 +21,26 @@ const Dashboard = () => {
         return <StaffDashboard />;
       case "student":
         return <StudentDashboard />;
+      case "admin":
+        return <Admindashboard/>
       default:
         return <h2>No role found</h2>;
     }
   };
 
   return (
-    //  <div className="dashboard-layout flex">
-    //   <Sidebar role={role} />
 
-    //   <div className="content-area flex-1">
-    //     {renderDashboard()}
-    //   </div>
-    // </div>
+     <div className="dashboard-layout flex">
+    <Sidebar role={role} />
 
-    <div className="dashboard-layout flex">
-      {/* Sidebar */}
-      <Sidebar role={role} />
+    <div className="flex-1">
+      <Navbar /><br />
 
-      {/* Content Area */}
-      <div className="flex-1">
-        <Navbar /><br />   {/* <-- TOP NAVBAR */}
-
-        <div className="p-6">
-          {renderDashboard()}
-        </div>
+      <div className="p-6">
+        {renderDashboard()}
       </div>
     </div>
+  </div>
   )
 }
 

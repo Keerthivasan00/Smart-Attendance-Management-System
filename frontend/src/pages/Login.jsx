@@ -29,20 +29,6 @@ function Login() {
 
     } 
 
-    
-
-    // else if (email.includes("hod")){
-    //   role = "hod";
-
-    //   localStorage.setItem(
-    //   "hod",
-    //   JSON.stringify({
-    //     name: "hodit",        // you can replace with real input
-    //     department: "IT"        // or fetch from backend later
-    //   })
-    // );
-    // } 
-
 
     else if (email.includes("hod")) {
   role = "hod";
@@ -55,6 +41,17 @@ function Login() {
   localStorage.setItem("hod", JSON.stringify(hodData));
 }
 
+
+else if (email.includes("admin")) {
+  role = "admin";
+
+  const adminData = {
+    name: "admin",       // default name
+    // department: "IT"     // default department
+  };
+
+  localStorage.setItem("hod", JSON.stringify(adminData));
+}
 
    
 
