@@ -1,117 +1,130 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import "../CSS/Studentdashboard.css";
+import axios from "axios";
 
 const Studentdashboard = () => {
-  const studentId = localStorage.getItem("studentId");
+  const USE_MOCK = true;
+
+  const studentId = localStorage.getItem("studentId") || "23";
 
   const [attendance, setAttendance] = useState(0);
-  const [leaves, setLeaves] = useState([]);
   const [holidays, setHolidays] = useState([]);
+  const [leaves, setLeaves] = useState([]);
 
   useEffect(() => {
-    if (!studentId) return;
+    if (USE_MOCK) loadMockData();
+    else fetchFromAPI();
+  }, []);
 
-    // Attendance
-    axios
-      .get(`http://localhost:5000/api/student/${studentId}/attendance`)
-      .then((res) => {
-        const { presentDays, totalDays } = res.data;
-        if (!presentDays || !totalDays) return;
-        setAttendance(((presentDays / totalDays) * 100).toFixed(1));
-      })
-      .catch(() => setAttendance(0));
+  const loadMockData = () => {
+    setAttendance(87);
 
-    // Leaves
-    axios
-      .get(`http://localhost:5000/api/student/${studentId}/leaves`)
-      .then((res) => {
-        if (Array.isArray(res.data)) setLeaves(res.data);
-        else if (Array.isArray(res.data.leaves)) setLeaves(res.data.leaves);
-        else setLeaves([]);
-      });
+    setHolidays([
+      { name: "Republic Day", date: "2025-01-26" },
+      { name: "Tamil New Year", date: "2025-04-14" },
+    ]);
 
-    // Holidays
-    axios.get("http://localhost:5000/api/holidays/upcoming").then((res) => {
-      if (Array.isArray(res.data)) setHolidays(res.data);
-      else setHolidays([]);
-    });
-  }, [studentId]);
+    setLeaves([
+      { date: "2025-02-10", reason: "Fever", status: "Approved" },
+      { date: "2025-02-05", reason: "Family event", status: "Pending" },
+      { date: "2025-01-20", reason: "Travel", status: "Rejected" },
+      { date: "2025-01-10", reason: "Cold", status: "Approved" },
+      { date: "2024-12-28", reason: "Function", status: "Approved" },
+      { date: "2024-12-20", reason: "Cough", status: "Approved" },
+    ]);
+  };
+
+  const fetchFromAPI = async () => {
+    try {
+      const att = await axios.get(`/api/student/${studentId}/attendance`);
+      const hol = await axios.get(`/api/holidays/upcoming`);
+      const lv = await axios.get(`/api/student/${studentId}/leaves`);
+
+      setAttendance(att.data.percentage);
+      setHolidays(hol.data);
+      setLeaves(lv.data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
-      {/* Top Section */}
-      <div className="top-grid">
-        {/* Attendance Card */}
-        <div className="attendance-card">
-          <h2 className="section-title">Attendance Overview</h2>
-          <div className="attendance-circle">
-            <svg className="circle-svg">
-              <circle className="circle-bg" cx="50%" cy="50%" r="45%" />
-              <circle
-                className="circle-progress"
-                style={{ strokeDasharray: `${attendance * 2.83} 283` }}
-                cx="50%"
-                cy="50%"
-                r="45%"
-              />
-            </svg>
-            <div className="attendance-percent">{attendance}%</div>
+      <div className="student-dashboard">
+
+        {/* ==== TOP TWO BOXES IN GRID ==== */}
+        <div className="top-grid">
+
+          {/* ATTENDANCE BLOCK */}
+          <div className="dashboard-section">
+            <h2 className="section-title">Attendance Overview</h2>
+
+            <div className="attendance-wrapper">
+              <div className="attendance-circle">
+                <svg>
+                  <circle className="bg-circle" cx="60" cy="60" r="50" />
+                  <circle
+                    className="progress-circle"
+                    cx="60" cy="60" r="50"
+                    style={{
+                      strokeDashoffset: 314 - (314 * attendance) / 100,
+                    }}
+                  />
+                </svg>
+                <div className="attendance-value">{attendance}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* HOLIDAYS BLOCK */}
+          <div className="dashboard-section">
+            <h2 className="section-title">Upcoming Holidays</h2>
+
+            {holidays.length > 0 ? (
+              <div className="holiday-list">
+                {holidays.map((h, i) => (
+                  <div key={i} className="holiday-item">
+                    <span className="holiday-name">{h.name}</span>
+                    <span className="holiday-date">{h.date}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="no-data">No upcoming holidays</p>
+            )}
           </div>
         </div>
 
-        {/* Upcoming Holidays */}
-        <div className="holiday-card">
-          <h2 className="section-title">Upcoming Holidays</h2>
-          {holidays.length > 0 ? (
-            <div className="holiday-grid">
-              {holidays.map((h, i) => (
-                <div key={i} className="holiday-item">
-                  <h3 className="holiday-name">{h.name}</h3>
-                  <p className="holiday-date">{h.date}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="no-data">No upcoming holidays</p>
-          )}
-        </div>
-      </div>
+        {/* ==== LEAVE TABLE AT BOTTOM ==== */}
+        <div className="dashboard-section leave-table-section">
+          <h2 className="section-title">Last 5 Leave Requests</h2>
 
-      {/* Leave Table */}
-      <div className="leave-card">
-        <h2 className="section-title">My Leave Requests</h2>
-        <div className="table-wrapper">
-          <table className="leave-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Reason</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leaves.length > 0 ? (
-                leaves
-                  .slice(-5) 
-                  .map((leave, index) => (
-                    <tr key={index}>
-                      <td>{leave.date}</td>
-                      <td>{leave.reason}</td>
-                      <td className={`status ${leave.status.toLowerCase()}`}>
-                        {leave.status}
-                      </td>
-                    </tr>
-                  ))
-              ) : (
+          <div className="table-container">
+            <table className="leave-table">
+              <thead>
                 <tr>
-                  <td colSpan="3" className="no-data">
-                    No leave requests found
-                  </td>
+                  <th>Date</th>
+                  <th>Reason</th>
+                  <th>Status</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {leaves.slice(0, 5).map((leave, index) => (
+                  <tr key={index}>
+                    <td>{leave.date}</td>
+                    <td>{leave.reason}</td>
+                    <td className={`status ${leave.status.toLowerCase()}`}>
+                      {leave.status}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {leaves.length === 0 && (
+              <p className="no-data">No leave records found</p>
+            )}
+          </div>
         </div>
       </div>
     </>

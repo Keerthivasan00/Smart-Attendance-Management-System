@@ -58,7 +58,6 @@ function Sidebar() {
     student: [
       { icon: <Calendar size={30} />, label: "Apply Leave", path: "/student/leave-apply" },
       { icon: <QrCode size={30} />, label: "Mark Attendance", path: "/student/mark-attendance" },
-      { icon: <BarChart2 size={30} />, label: "Attendance %", path: "/student/view-attendance" },
       { icon: <Table2 size={30} />, label: "View Time Table", path: "/student/view-timetable" }
     ]
   };
