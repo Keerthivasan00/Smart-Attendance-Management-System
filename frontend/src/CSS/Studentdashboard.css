@@ -1,0 +1,144 @@
+.dashboard-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.top-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+/* Attendance card */
+.attendance-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  margin-left: 10px;
+}
+
+/* Circular progress */
+.attendance-circle {
+  width: 140px;
+  height: 140px;
+  margin: auto;
+  position: relative;
+}
+
+.circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  stroke: #e0e0e0;
+  stroke-width: 8;
+  fill: none;
+}
+
+.circle-progress {
+  stroke: #2d7df4;
+  stroke-width: 8;
+  fill: none;
+  stroke-linecap: round;
+  transition: 1s ease;
+}
+
+.attendance-percent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #2d7df4;
+}
+
+/* Holiday card */
+.holiday-card {
+  width: 950px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.holiday-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.holiday-item {
+  background: #e9ffec;
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #25c747;
+}
+
+.holiday-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #167a2f;
+}
+
+.holiday-date {
+  font-size: 12px;
+  color: #444;
+}
+
+/* Leave Table */
+.leave-card {
+  width: 1430px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-left: 10px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.leave-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leave-table th,
+.leave-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.leave-table th {
+  background: #f1f1f1;
+  font-weight: 600;
+}
+
+.leave-table tr:hover {
+  background: #f9f9f9;
+}
+
+/* Status colors */
+.status.approved { color: #22bb33; font-weight: bold; }
+.status.rejected { color: #ff3333; font-weight: bold; }
+.status.pending  { color: #ffb300; font-weight: bold; }
+
+.no-data {
+  text-align: center;
+  color: #777;
+  padding: 10px;
+}

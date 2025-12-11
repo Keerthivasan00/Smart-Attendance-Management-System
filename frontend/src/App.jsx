@@ -17,6 +17,7 @@ import StudentLeaveApply from "./pages/StudentLeaveApply.jsx";
 import StudentMarkAttendance from "./pages/StudentMarkAttendance.jsx";
 import StudentViewAttendance from "./pages/StudentViewAttendance.jsx";
 import StudentViewTimetable from "./pages/StudentViewTimetable.jsx";
+import Profile from "./pages/Profile.jsx";
 import "./index.css";
 
 
@@ -58,6 +59,9 @@ function App() {
       <Route path="/student/mark-attendance" element={<StudentMarkAttendance />} />
       <Route path="/student/view-attendance" element={<StudentViewAttendance />} />
       <Route path="/student/view-timetable" element={<StudentViewTimetable />} />
+
+      {/* profie route */}
+      <Route path="/profile" element={<Profile />} />
 
     </Routes>
   );

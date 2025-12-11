@@ -21,11 +21,6 @@ function AddStaff() {
           </div>
 
           <div className="form-group">
-            <label>Staff ID</label>
-            <input type="text" />
-          </div>
-
-          <div className="form-group">
             <label>Email</label>
             <input type="email" />
           </div>
@@ -46,6 +41,16 @@ function AddStaff() {
               <option>MECH</option>
               <option>CIVIL</option>
             </select>
+          </div>
+
+          <div className="form-group">
+            <label>Staff Experience</label>
+            <input type="number" />
+          </div>
+
+          <div className="form-group">
+            <label>Specialization</label>
+            <input type="text" />
           </div>
 
           <div className="form-group">
