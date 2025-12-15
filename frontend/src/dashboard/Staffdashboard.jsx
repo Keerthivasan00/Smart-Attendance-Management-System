@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/Layout";   // <-- add this
+import Layout from "../components/Layout"; 
 
 const StaffDashboard = () => {
   return (
