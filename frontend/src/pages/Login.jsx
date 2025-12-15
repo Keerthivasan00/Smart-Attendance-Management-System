@@ -1,35 +1,49 @@
-import React, { useState } from 'react';
-import login from '../assets/login.png';
-import logo from '../assets/logo.png';
+import React, { useState } from "react";
+import logins from "../assets/login.png";
+import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const login = async () => {
+    const res = await axios.post(
+      "http://localhost:8080/auth/login",
+      {"email":email,
+      "password":password}
+    );
+
+    console.log(res.data);
+    const {role,token}=res.data;
+    
+    localStorage.setItem("token",token)
+    localStorage.setItem("role",role)
+    console.log(token);
+    console.log(role);
+    
+  };
+
   // LOGIN FUNCTION
   const handleLogin = (event) => {
     event.preventDefault();
-
+    login();
     // --- SIMPLE DEMO ROLE LOGIC (Change this later with backend) ---
-    let role = "";
+    // let role = "";
 
-    if (email.includes("manager")){
-      role = "manager";
+    // if (email.includes("manager")) {
+    //   role = "manager";
 
-      localStorage.setItem(
-      "manager",
-      JSON.stringify({
-        name: "VARUN M",        // you can replace with real input
-        department: "IT"        // or fetch from backend later
-      })
-    );
-
-    } 
-
-    
+    //   localStorage.setItem(
+    //     "manager",
+    //     JSON.stringify({
+    //       name: "VARUN M", // you can replace with real input
+    //       department: "IT", // or fetch from backend later
+    //     })
+    //   );
+    // }
 
     // else if (email.includes("hod")){
     //   role = "hod";
@@ -41,53 +55,41 @@ function Login() {
     //     department: "IT"        // or fetch from backend later
     //   })
     // );
-    // } 
+    // // }
+    // else if (email.includes("hod")) {
+    //   role = "hod";
 
+    //   const hodData = {
+    //     name: "hodit", // default name
+    //     department: "IT", // default department
+    //   };
 
-    else if (email.includes("hod")) {
-  role = "hod";
+    //   localStorage.setItem("hod", JSON.stringify(hodData));
+    // } else if (email.includes("staff")) {
+    //   role = "staff";
 
-  const hodData = {
-    name: "hodit",       // default name
-    department: "IT"     // default department
-  };
+    //   localStorage.setItem(
+    //     "staff",
+    //     JSON.stringify({
+    //       name: "staff", // you can replace with real input
+    //       department: "IT", // or fetch from backend later
+    //     })
+    //   );
+    // } else if (email.includes("student")) {
+    //   role = "student";
 
-  localStorage.setItem("hod", JSON.stringify(hodData));
-}
+    //   localStorage.setItem(
+    //     "student",
+    //     JSON.stringify({
+    //       name: "student", // you can replace with real input
+    //       department: "IT", // or fetch from backend later
+    //     })
+    //   );
+    // } else role = "student"; // default
 
-
-   
-
-    else if (email.includes("staff")){
-      role = "staff";
-
-      localStorage.setItem(
-      "staff",
-      JSON.stringify({
-        name: "staff",        // you can replace with real input
-        department: "IT"        // or fetch from backend later
-      })
-    );
-
-    } 
-
-    else if (email.includes("student")){
-      role = "student";
-
-      localStorage.setItem(
-      "student",
-      JSON.stringify({
-        name: "student",        // you can replace with real input
-        department: "IT"        // or fetch from backend later
-      })
-    );
-    } 
-
-    else role = "student"; // default
-
-    // STORE ROLE IN LOCALSTORAGE
-    // localStorage.setItem("loggedUser", JSON.stringify(userData));
-    localStorage.setItem("role", role);
+    // // STORE ROLE IN LOCALSTORAGE
+    // // localStorage.setItem("loggedUser", JSON.stringify(userData));
+    // localStorage.setItem("role", role);
 
     // REDIRECT TO DASHBOARD
     navigate("/dashboard");
@@ -133,65 +135,69 @@ function Login() {
       `}</style>
 
       <div className="flex flex-col md:flex-row h-screen w-full">
-
-  {/* LEFT SIDE IMAGE */}
-  <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-white p-6">
-    <img
-      src={login}
-      alt="login"
-      className="w-3/4 h-auto object-contain rounded-xl"
-    />
-  </div>
-
-  {/* RIGHT SIDE FORM */}
-  <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-blue-600 p-6">
-    <div className='bg-white rounded-2xl shadow-xl w-full max-w-1/2  flex flex-col justify-center p-4'>
-
-      {/* logo */}
-      <div className="flex justify-center mb-8">
-        <img src={logo} alt="logo" className="h-40 w-40 rounded-full shadow-lg" />
-      </div><br /><br />
-
-      {/* title */}
-      <h3 className="ip">Welcome back to Checkify</h3>
-      <h3 className="ip">Please Login!!</h3><br />
-
-      <form className="space-y-5" onSubmit={handleLogin}>
-
-        <div>
-          <label className="block text-lg font-medium mb-1">Email</label>
-          <input
-            type="email"
-            className="w-full p-3 border rounded-md"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+        {/* LEFT SIDE IMAGE */}
+        <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-white p-6">
+          <img
+            src={logins}
+            alt="login"
+            className="w-3/4 h-auto object-contain rounded-xl"
           />
         </div>
 
-        <div>
-          <label className="block text-lg font-medium mb-1">Password</label>
-          <input
-            type="password"
-            className="w-full p-3 border rounded-md"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div><br />
+        {/* RIGHT SIDE FORM */}
+        <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-blue-600 p-6">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-1/2  flex flex-col justify-center p-4">
+            {/* logo */}
+            <div className="flex justify-center mb-8">
+              <img
+                src={logo}
+                alt="logo"
+                className="h-40 w-40 rounded-full shadow-lg"
+              />
+            </div>
+            <br />
+            <br />
 
-        <button type="submit" className="login-btn">
-          Login
-        </button>
+            {/* title */}
+            <h3 className="ip">Welcome back to Checkify</h3>
+            <h3 className="ip">Please Login!!</h3>
+            <br />
 
-      </form>
+            <form className="space-y-5" onSubmit={handleLogin}>
+              <div>
+                <label className="block text-lg font-medium mb-1">Email</label>
+                <input
+                  type="email"
+                  className="w-full p-3 border rounded-md"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-    </div>
-  </div>
+              <div>
+                <label className="block text-lg font-medium mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full p-3 border rounded-md"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <br />
 
-</div>
+              <button type="submit" className="login-btn">
+                Login
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

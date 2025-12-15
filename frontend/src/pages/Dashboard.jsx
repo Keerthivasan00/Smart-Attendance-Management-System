@@ -9,6 +9,7 @@ import StudentDashboard from '../dashboard/Studentdashboard'
 const Dashboard = () => {
 
      const role = localStorage.getItem("role"); 
+     const token=localStorage.getItem("token");
 
   const renderDashboard = () => {
     switch (role) {
@@ -44,6 +45,8 @@ const Dashboard = () => {
 
         <div className="p-6">
           {renderDashboard()}
+          <h1>{role}</h1>
+          <h1>{token}</h1>
         </div>
       </div>
     </div>

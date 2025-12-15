@@ -1,4 +1,4 @@
 package com.checkify.Backend.controller;
 
-public class ManagementController {
+public class ManagerController {
 }
