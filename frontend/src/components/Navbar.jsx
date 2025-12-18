@@ -6,10 +6,22 @@ import logo1 from "../assets/logo1.png";
 const Navbar = () => {
   const [openProfile, setOpenProfile] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   const navigate = useNavigate();
 
   const profileRef = useRef();
   const notifRef = useRef();
+
+  // Load notifications for logged-in user
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    const allRequests = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+
+    const myNotif = allRequests.filter((req) => req.sentTo === role);
+
+    setNotifications(myNotif);
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -38,6 +50,22 @@ const Navbar = () => {
           width: 100px;
           height: auto;
           padding: 5px;
+          margin-left:20px;
+        }
+
+        .relative{
+          margin-right:20px;
+        }
+
+        .badge {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: red;
+          color: white;
+          padding: 2px 6px;
+          border-radius: 50%;
+          font-size: 12px;
         }
       `}</style>
 
@@ -46,7 +74,7 @@ const Navbar = () => {
         {/* Logo */}
         <img className="logo" src={logo1} alt="logo" />
 
-        {/* Right Section Icons */}
+        {/* Right Icons */}
         <div className="flex items-center gap-6 mr-20">
 
           {/* Notification Icon */}
@@ -56,23 +84,30 @@ const Navbar = () => {
               onClick={() => setOpenNotif(!openNotif)}
             />
 
-            {/* {openNotif && (
-              <div className="absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-lg p-2 z-50">
-                <h3 className="px-3 py-2 font-semibold border-b">Notifications</h3>
+            {/* Badge - Notification Count */}
+            {notifications.length > 0 && (
+              <span className="badge">{notifications.length}</span>
+            )}
 
-                <p className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md cursor-pointer">
-                  ✔ Leave Approved
-                </p>
+            {/* Notification Dropdown */}
+            {openNotif && (
+              <div className="absolute right-0 mt-3 w-64 bg-white shadow-lg rounded-lg p-3 z-50 max-h-72 overflow-y-auto">
 
-                <p className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md cursor-pointer">
-                  ✉ New Message From Admin
-                </p>
+                {notifications.length === 0 ? (
+                  <p className="text-gray-500 text-center">No new notifications</p>
+                ) : (
+                  notifications.map((item) => (
+                    <div key={item.id} className="p-2 border-b">
+                      <p className="font-semibold">{item.applicantName}</p>
+                      <p className="text-sm text-gray-600">
+                        Requested leave ({item.fromDate} → {item.toDate})
+                      </p>
+                    </div>
+                  ))
+                )}
 
-                <p className="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md cursor-pointer">
-                  📅 Attendance Report Available
-                </p>
               </div>
-            )} */}
+            )}
           </div>
 
           {/* Profile Dropdown */}

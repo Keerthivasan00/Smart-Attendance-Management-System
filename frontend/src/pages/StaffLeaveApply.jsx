@@ -14,27 +14,39 @@ function StaffLeaveApply() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newLeave = {
-      id: Date.now(),
-      staffName: staff.name,
-      department: staff.department,
-      reason,
-      date,
-      status: "Pending",
-    };
+  // get role from local storage  
+  const role = localStorage.getItem("role"); // "staff" in your case
 
-    // get old leaves
-    let oldLeaves = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+  // create leave request object
+  const leaveRequest = {
+    id: Date.now(),
+    applicantName: staff.name,
+    applicantRole: role,
+    department: staff.department,
+    reason,
+    date,
+    status: "Pending",
+    sentTo: "", // who will get the notification
+  };
 
-    // push new one
-    oldLeaves.push(newLeave);
+  // notification routing logic
+  if (role === "student") {
+    leaveRequest.sentTo = "staff";
+  } else if (role === "staff") {
+    leaveRequest.sentTo = "hod";
+  } else if (role === "hod" || role === "manager") {
+    leaveRequest.sentTo = "admin";
+  }
 
-    // save back
-    localStorage.setItem("leaveRequests", JSON.stringify(oldLeaves));
+  // save request into localStorage
+  let oldRequests = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+  oldRequests.push(leaveRequest);
 
-    alert("Leave Applied Successfully!");
-    setReason("");
-    setDate("");
+  localStorage.setItem("leaveRequests", JSON.stringify(oldRequests));
+
+  alert("Leave Applied Successfully!");
+  setReason("");
+  setDate("");
   };
 
   return (
