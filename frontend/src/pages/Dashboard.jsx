@@ -37,20 +37,16 @@ const Dashboard = () => {
     <div className="flex-1">
       <Navbar /><br />
 
-<<<<<<< HEAD
       {/* Content Area */}
       <div className="flex-1">
         <Navbar /><br />   {/* <-- TOP NAVBAR */}
+        <Admindashboard/>
 
-        <div className="p-6">
+        {/* <div className="p-6">
           {renderDashboard()}
           <h1>{role}</h1>
           <h1>{token}</h1>
-        </div>
-=======
-      <div className="p-6">
-        {renderDashboard()}
->>>>>>> 9c0c5f4c2d2099ece1f623a3827bd4ee71a7c417
+        </div> */}
       </div>
     </div>
   </div>

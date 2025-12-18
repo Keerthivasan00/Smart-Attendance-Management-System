@@ -10,20 +10,19 @@ function Login() {
   const navigate = useNavigate();
 
   const login = async () => {
-    const res = await axios.post(
-      "http://localhost:8080/auth/login",
-      {"email":email,
-      "password":password}
-    );
+    const res = await axios.post("http://localhost:8080/auth/login", {
+      email: email,
+      password: password,
+    });
 
     console.log(res.data);
-    const {role,token}=res.data;
-    
-    localStorage.setItem("token",token)
-    localStorage.setItem("role",role)
+    const { role, token } = res.data;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", role);
     console.log(token);
     console.log(role);
-    
+    navigate("/dashboard");
   };
 
   // LOGIN FUNCTION
@@ -92,7 +91,6 @@ function Login() {
     // localStorage.setItem("role", role);
 
     // REDIRECT TO DASHBOARD
-    navigate("/dashboard");
   };
 
   return (
