@@ -22,7 +22,8 @@ function Login() {
         password,
       });
 
-      const { role, token } = res.data;
+    console.log(res.data);
+    const { role, token } = res.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
