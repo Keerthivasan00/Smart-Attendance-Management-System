@@ -64,7 +64,6 @@ function AddStudent() {
             <input type="text" />
           </div>
 
-          {/* RELATION CHOICE */}
           <h2 className="section-title">Contact Relation</h2>
 
           <div className="form-group-full">

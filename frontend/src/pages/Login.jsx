@@ -18,6 +18,21 @@ function Login() {
     console.log(res.data);
     const { role, token } = res.data;
 
+     const user = {
+    name: email.split("@")[0],
+    role: role,
+    department:
+      role === "student"
+        ? "CSE"
+        : role === "staff"
+        ? "IT"
+        : role === "hod"
+        ? "ECE"
+        : role === "manager"
+        ? "MECH"
+        : "ADMIN",
+  };
+
     localStorage.setItem("token", token);
     localStorage.setItem("role", role);
     console.log(token);
@@ -29,68 +44,6 @@ function Login() {
   const handleLogin = (event) => {
     event.preventDefault();
     login();
-    // --- SIMPLE DEMO ROLE LOGIC (Change this later with backend) ---
-    // let role = "";
-
-    // if (email.includes("manager")) {
-    //   role = "manager";
-
-    //   localStorage.setItem(
-    //     "manager",
-    //     JSON.stringify({
-    //       name: "VARUN M", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // }
-
-    // else if (email.includes("hod")){
-    //   role = "hod";
-
-    //   localStorage.setItem(
-    //   "hod",
-    //   JSON.stringify({
-    //     name: "hodit",        // you can replace with real input
-    //     department: "IT"        // or fetch from backend later
-    //   })
-    // );
-    // // }
-    // else if (email.includes("hod")) {
-    //   role = "hod";
-
-    //   const hodData = {
-    //     name: "hodit", // default name
-    //     department: "IT", // default department
-    //   };
-
-    //   localStorage.setItem("hod", JSON.stringify(hodData));
-    // } else if (email.includes("staff")) {
-    //   role = "staff";
-
-    //   localStorage.setItem(
-    //     "staff",
-    //     JSON.stringify({
-    //       name: "staff", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // } else if (email.includes("student")) {
-    //   role = "student";
-
-    //   localStorage.setItem(
-    //     "student",
-    //     JSON.stringify({
-    //       name: "student", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // } else role = "student"; // default
-
-    // // STORE ROLE IN LOCALSTORAGE
-    // // localStorage.setItem("loggedUser", JSON.stringify(userData));
-    // localStorage.setItem("role", role);
-
-    // REDIRECT TO DASHBOARD
   };
 
   return (
