@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
 import ManagerDashboard from '../dashboard/Managerdashboard'
@@ -12,22 +12,25 @@ const Dashboard = () => {
      const role = localStorage.getItem("role"); 
      const token=localStorage.getItem("token");
 
-  const renderDashboard = () => {
+    const renderDashboard = () => {
     switch (role) {
-      case "manager":
+      case "MANAGER":
         return <ManagerDashboard />;
-      case "hod":
+      case "HOD":
         return <HODDashboard />;
-      case "staff":
+      case "STAFF":
         return <StaffDashboard />;
-      case "student":
+      case "STUDENT":
         return <StudentDashboard />;
-      case "admin":
+      case "ADMIN":
         return <Admindashboard/>
       default:
         return <h2>No role found</h2>;
     }
   };
+
+
+  
 
   return (
 
@@ -37,16 +40,13 @@ const Dashboard = () => {
     <div className="flex-1">
       <Navbar /><br />
 
-      {/* Content Area */}
       <div className="flex-1">
-        <Navbar /><br />   {/* <-- TOP NAVBAR */}
-        <Admindashboard/>
 
-        {/* <div className="p-6">
+        <div className="p-6">
           {renderDashboard()}
-          <h1>{role}</h1>
-          <h1>{token}</h1>
-        </div> */}
+          {/* <h1>{role}</h1>
+          <h1>{token}</h1> */}
+        </div>
       </div>
     </div>
   </div>

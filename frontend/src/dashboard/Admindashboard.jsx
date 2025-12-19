@@ -7,7 +7,7 @@ import Layout from "../components/Layout";
   return (
     <>
    
-    <div className="admin-dashboard">
+    <div className="admin-dashboard p-3">
       {/* 1️⃣ Summary Cards */}
       <div className="cards-container">
         <div className="card students">
@@ -24,9 +24,9 @@ import Layout from "../components/Layout";
         </div>
       </div>
 
+       <div className="mt-4"> <span className="font-bold text-xl">Users Growth Trend</span></div>
       {/* 2️⃣ Growth Line Chart */}
-      <div className="chart-container">
-        <h3>Users Growth Trend</h3>
+      <div className="chart-container mt-2 px-5">
         <Chart />
       </div>
     </div>

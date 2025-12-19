@@ -20,7 +20,31 @@ export default function Chart() {
   return (
     <ResponsiveContainer width="100%" height={350}>
       <AreaChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" />
+        
+        {/* 🔹 Linear Gradient Definitions */}
+        <defs>
+          <linearGradient id="studentsGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#4f46e5" stopOpacity={0.1} />
+          </linearGradient>
+
+          <linearGradient id="staffsGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#16a34a" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#16a34a" stopOpacity={0.1} />
+          </linearGradient>
+
+          <linearGradient id="managementGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#dc2626" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#dc2626" stopOpacity={0.1} />
+          </linearGradient>
+        </defs>
+
+        {/* 🔹 Customized Cartesian Grid */}
+        <CartesianGrid
+          strokeDasharray="5 5"
+          stroke="#e5e7eb"
+        />
+
         <XAxis dataKey="month" />
         <YAxis />
         <Tooltip />
@@ -28,28 +52,30 @@ export default function Chart() {
 
         {/* Students */}
         <Area
-  type="monotone"
-  dataKey="students"
-  stackId="1"
-  stroke="#4f46e5"
-  fill="#c7d2fe"
-/>
+          type="monotone"
+          dataKey="students"
+          stackId="1"
+          stroke="#4f46e5"
+          fill="url(#studentsGradient)"
+        />
 
-<Area
-  type="monotone"
-  dataKey="staffs"
-  stackId="1"
-  stroke="#16a34a"
-  fill="#bbf7d0"
-/>
+        {/* Staffs */}
+        <Area
+          type="monotone"
+          dataKey="staffs"
+          stackId="1"
+          stroke="#16a34a"
+          fill="url(#staffsGradient)"
+        />
 
-<Area
-  type="monotone"
-  dataKey="management"
-  stackId="1"
-  stroke="#dc2626"
-  fill="#fecaca"
-/>
+        {/* Management */}
+        <Area
+          type="monotone"
+          dataKey="management"
+          stackId="1"
+          stroke="#dc2626"
+          fill="url(#managementGradient)"
+        />
       </AreaChart>
     </ResponsiveContainer>
   );
