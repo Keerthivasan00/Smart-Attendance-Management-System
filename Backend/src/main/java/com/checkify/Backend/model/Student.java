@@ -20,13 +20,11 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private Users user;
-
     private String name;
     private String gender;
     private LocalDate dob;
-    private String address;
     private String year;
     private String mobile_no;
     private String relation;

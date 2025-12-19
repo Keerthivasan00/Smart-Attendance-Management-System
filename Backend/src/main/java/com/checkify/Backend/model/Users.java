@@ -26,6 +26,6 @@ public class Users {
     private Student student;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private Student Staff;
+    private Staff staff;
 
 }
