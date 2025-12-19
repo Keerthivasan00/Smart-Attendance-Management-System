@@ -54,6 +54,15 @@ function AddStaff() {
           </div>
 
           <div className="form-group">
+            <label>Position</label>
+            <select>
+              <option>Select position</option>
+              <option>HOD</option>
+              <option>Staff</option>
+            </select>
+          </div>
+
+          <div className="form-group">
             <label>Gender</label>
             <select>
               <option>Select</option>

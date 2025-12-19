@@ -22,43 +22,43 @@ function Sidebar() {
   const role = localStorage.getItem("role");
 
   const dashboardPath = {
-    manager: "/manager/dashboard",
-    hod: "/hod/dashboard",
-    staff: "/staff/dashboard",
-    student: "/student/dashboard",
-    admin: "/admin/dashboard"
+    MANAGER: "/manager/dashboard",
+    HOD: "/hod/dashboard",
+    STAFF: "/staff/dashboard",
+    STUDENT: "/student/dashboard",
+    ADMIN: "/admin/dashboard"
   }[role];
 
   const menuItems = {
-    admin: [
-      { icon: <Users size={30} />, label: "Add Student", path: "/manager/add-students" },
-      { icon: <PlusCircle size={30} />, label: "Add Staff", path: "/manager/add-staffs" },
-      { icon: <Edit size={30} />, label: "Edit Student", path: "/manager/edit-students" },
-      { icon: <Edit size={30} />, label: "Edit Staff", path: "/manager/edit-staffs" },
-      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/manager/apply-leave" }
+    ADMIN: [
+      { icon: <Users size={30} />, label: "Add Student", path: "/admin/add-students" },
+      { icon: <PlusCircle size={30} />, label: "Add Staff", path: "/admin/add-staffs" },
+      { icon: <Edit size={30} />, label: "Edit Student", path: "/admin/edit-students" },
+      { icon: <Edit size={30} />, label: "Edit Staff", path: "/admin/edit-staffs" },
+      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/admin/apply-leave" }
     ],
-    manager: [
+    MANAGER: [
       { icon: <Users size={30} />, label: "Add Student", path: "/manager/add-students" },
       { icon: <PlusCircle size={30} />, label: "Add Staff", path: "/manager/add-staffs" },
       { icon: <Edit size={30} />, label: "Edit Student", path: "/manager/edit-students" },
       { icon: <NotebookPen size={30} />, label: "Edit Staff", path: "/manager/edit-staffs" },
       { icon: <Calendar size={30} />, label: "Apply Leave", path: "/manager/apply-leave" }
     ],
-    hod: [
+    HOD: [
       { icon: <Users size={30} />, label: "Assign Staff to Class", path: "/hod/assign-staff" },
       { icon: <ClipboardList size={30} />, label: "Approve Staff Leave", path: "/hod/leave-approve" },
       { icon: <Calendar size={30} />, label: "Apply Leave", path: "/hod/apply-leave" }
     ],
-    staff: [
+    STAFF: [
       { icon: <UserCheck size={30} />, label: "Approve Student Leave", path: "/staff/approve-leave" },
       { icon: <Calendar size={30} />, label: "Apply Leave to HOD", path: "/staff/apply-leave" },
       { icon: <QrCode size={30} />, label: "Generate OTP", path: "/staff/generate-otp" },
       { icon: <BarChart2 size={30} />, label: "View Attendance", path: "/staff/view-attendance" }
     ],
-    student: [
-      { icon: <Calendar size={30} />, label: "Apply Leave", path: "/student/leave-apply" },
-      { icon: <QrCode size={30} />, label: "Mark Attendance", path: "/student/mark-attendance" },
-      { icon: <Table2 size={30} />, label: "View Time Table", path: "/student/view-timetable" }
+    STUDENT : [
+      { icon:<Calendar size={30}/>,label:"Apply Leave",path:"/student/leave-apply"},
+      {icon:<QrCode size={30}/>,label:"Mark Attendance",path:"/student/mark-attendance"},
+      {icon:<Table2 size={30}/>,label:"View Time Table",path:"/student/view-timetable"}
     ]
   };
 

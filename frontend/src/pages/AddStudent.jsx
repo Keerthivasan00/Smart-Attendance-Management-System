@@ -21,11 +21,6 @@ function AddStudent() {
           </div>
 
           <div className="form-group">
-            <label>Register Number</label>
-            <input type="text" />
-          </div>
-
-          <div className="form-group">
             <label>Date of Birth</label>
             <input type="date" />
           </div>
@@ -64,6 +59,11 @@ function AddStudent() {
             </select>
           </div>
 
+           <div className="form-group">
+            <label>Phone Number</label>
+            <input type="text" />
+          </div>
+
           {/* RELATION CHOICE */}
           <h2 className="section-title">Contact Relation</h2>
 
@@ -85,17 +85,11 @@ function AddStudent() {
               <h2 className="section-title">Parent Details</h2>
 
               <div className="form-group">
-                <label>Father Name</label>
+                <label>Name</label>
                 <input type="text" />
               </div>
-
               <div className="form-group">
-                <label>Mother Name</label>
-                <input type="text" />
-              </div>
-
-              <div className="form-group">
-                <label>Parent Mobile Number</label>
+                <label>Mobile Number</label>
                 <input type="number" />
               </div>
 
@@ -112,17 +106,12 @@ function AddStudent() {
               <h2 className="section-title">Guardian Details</h2>
 
               <div className="form-group">
-                <label>Guardian Name</label>
+                <label>Name</label>
                 <input type="text" />
               </div>
 
               <div className="form-group">
-                <label>Relation with Student</label>
-                <input type="text" placeholder="Uncle / Aunt / Brother / Sister" />
-              </div>
-
-              <div className="form-group">
-                <label>Guardian Mobile Number</label>
+                <label>Mobile Number</label>
                 <input type="number" />
               </div>
 

@@ -7,10 +7,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} />
-
-      {/* Main content */}
       <div className="flex-1 flex flex-col transition-all duration-300">
         <Navbar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
         <div className="page-content flex-1 overflow-auto p-6">{children}</div>

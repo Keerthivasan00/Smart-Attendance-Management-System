@@ -47,9 +47,9 @@ const Navbar = () => {
     <>
       <style>{`
         .logo {
-          width: 100px;
+          width: 90px;
           height: auto;
-          padding: 5px;
+          padding: 2px;
           margin-left:20px;
         }
 
@@ -69,7 +69,7 @@ const Navbar = () => {
         }
       `}</style>
 
-      <div className="w-full bg-white shadow-md px-6 py-4 flex justify-between items-center">
+      <div className="w-full bg-white shadow-md h-14 px-4 flex justify-between items-center">
 
         {/* Logo */}
         <img className="logo" src={logo1} alt="logo" />
@@ -80,7 +80,7 @@ const Navbar = () => {
           {/* Notification Icon */}
           <div className="relative" ref={notifRef}>
             <FaBell
-              className="text-3xl text-gray-700 cursor-pointer"
+              className="text-2xl text-gray-700 cursor-pointer"
               onClick={() => setOpenNotif(!openNotif)}
             />
 
@@ -113,7 +113,7 @@ const Navbar = () => {
           {/* Profile Dropdown */}
           <div className="relative" ref={profileRef}>
             <FaUserCircle
-              className="text-4xl text-gray-700 cursor-pointer "
+              className="text-3xl text-gray-700 cursor-pointer "
               onClick={() => setOpenProfile(!openProfile)}
             />
 
