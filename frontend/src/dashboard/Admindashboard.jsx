@@ -24,9 +24,9 @@ import Layout from "../components/Layout";
         </div>
       </div>
 
-       <div className="mt-4"> <span className="font-bold text-xl">Users Growth Trend</span></div>
+       <div className=""> <span className="font-bold text-xl">Users Growth Trend</span></div>
       {/* 2️⃣ Growth Line Chart */}
-      <div className="chart-container mt-2 px-5">
+      <div className="chart-container px-5">
         <Chart />
       </div>
     </div>

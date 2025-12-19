@@ -22,12 +22,12 @@ public class Users {
 
     @Column(length = 50, nullable = false)
     private String role; // STUDENT, STAFF, HOD, MANAGEMENT, ADMIN
-
-    // New: QR identifier used to generate a QR code to present
-    @Column(name = "qr_id", length = 150, unique = true)
-    private String qrId;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    // ... @PrePersist / @PreUpdate as before
+//
+//    // New: QR identifier used to generate a QR code to present
+//    @Column(name = "qr_id", length = 150, unique = true)
+//    private String qrId;
+//
+//    private LocalDateTime createdAt;
+//    private LocalDateTime updatedAt;
+//    // ... @PrePersist / @PreUpdate as before
 }
