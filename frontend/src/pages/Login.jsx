@@ -7,90 +7,41 @@ import axios from "axios";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
   const login = async () => {
-    const res = await axios.post("http://localhost:8080/auth/login", {
-      email: email,
-      password: password,
-    });
+    setLoading(true);
+    setError("");
 
-    console.log(res.data);
-    const { role, token } = res.data;
+    try {
+      const res = await axios.post("http://localhost:8080/auth/login", {
+        email,
+        password,
+      });
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("role", role);
-    console.log(token);
-    console.log(role);
-    navigate("/dashboard");
+      const { role, token } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+
+      navigate("/dashboard");
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        setError("Invalid email or password");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // LOGIN FUNCTION
   const handleLogin = (event) => {
     event.preventDefault();
     login();
-    // --- SIMPLE DEMO ROLE LOGIC (Change this later with backend) ---
-    // let role = "";
-
-    // if (email.includes("manager")) {
-    //   role = "manager";
-
-    //   localStorage.setItem(
-    //     "manager",
-    //     JSON.stringify({
-    //       name: "VARUN M", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // }
-
-    // else if (email.includes("hod")){
-    //   role = "hod";
-
-    //   localStorage.setItem(
-    //   "hod",
-    //   JSON.stringify({
-    //     name: "hodit",        // you can replace with real input
-    //     department: "IT"        // or fetch from backend later
-    //   })
-    // );
-    // // }
-    // else if (email.includes("hod")) {
-    //   role = "hod";
-
-    //   const hodData = {
-    //     name: "hodit", // default name
-    //     department: "IT", // default department
-    //   };
-
-    //   localStorage.setItem("hod", JSON.stringify(hodData));
-    // } else if (email.includes("staff")) {
-    //   role = "staff";
-
-    //   localStorage.setItem(
-    //     "staff",
-    //     JSON.stringify({
-    //       name: "staff", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // } else if (email.includes("student")) {
-    //   role = "student";
-
-    //   localStorage.setItem(
-    //     "student",
-    //     JSON.stringify({
-    //       name: "student", // you can replace with real input
-    //       department: "IT", // or fetch from backend later
-    //     })
-    //   );
-    // } else role = "student"; // default
-
-    // // STORE ROLE IN LOCALSTORAGE
-    // // localStorage.setItem("loggedUser", JSON.stringify(userData));
-    // localStorage.setItem("role", role);
-
-    // REDIRECT TO DASHBOARD
   };
 
   return (
@@ -99,41 +50,25 @@ function Login() {
         .login-btn {
           width: 100%;
           background: white;
-          color: #2563eb; 
-          padding: 12px 16px;
+          color: #2563eb;
+          padding: 10px 16px;
           border-radius: 8px;
           font-weight: 600;
           transition: 0.3s;
           border: 2px solid #2563eb;
         }
         .login-btn:hover {
-          background: #1e3a8a; 
+          background: #1e3a8a;
           color: white;
         }
-        .login-title {
-          font-size: 30px;       
-          font-weight: 500;      
-          margin-bottom: 24px;  
-          color: blue;
-          margin-left: 20px;
-        }
-        .ip {
-          font-size: 18px;       
-          font-weight: 500;      
-          margin-bottom: 8px; 
-          margin-left: 20px;  
-        }
-        .box {
-          width: 90%;
-          padding: 12px 16px;
-          margin-left: 20px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
+        .login-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
         }
       `}</style>
 
       <div className="flex flex-col md:flex-row h-screen w-full">
-        {/* LEFT SIDE IMAGE */}
+        {/* LEFT IMAGE */}
         <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-white p-6">
           <img
             src={logins}
@@ -142,31 +77,42 @@ function Login() {
           />
         </div>
 
-        {/* RIGHT SIDE FORM */}
+        {/* RIGHT FORM */}
         <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-blue-600 p-6">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-1/2  flex flex-col justify-center p-4">
-            {/* logo */}
-            <div className="flex justify-center mb-8">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm flex flex-col justify-center p-6">
+
+            {/* LOGO */}
+            <div className="flex justify-center mb-6">
               <img
                 src={logo}
                 alt="logo"
-                className="h-40 w-40 rounded-full shadow-lg"
+                className="h-28 w-28 rounded-full shadow-lg"
               />
             </div>
-            <br />
-            <br />
 
-            {/* title */}
-            <h3 className="ip">Welcome back to Checkify</h3>
-            <h3 className="ip">Please Login!!</h3>
-            <br />
+            <h3 className="text-lg font-medium text-center mb-1">
+              Welcome back to Checkify
+            </h3>
+            <h3 className="text-sm text-center mb-5">
+              Please login to continue
+            </h3>
 
-            <form className="space-y-5" onSubmit={handleLogin}>
+            {/* ERROR MESSAGE */}
+            {error && (
+              <div className="mb-4 p-3 text-red-700 bg-red-100 border border-red-300 rounded-md text-center text-sm">
+                {error}
+              </div>
+            )}
+
+            {/* FORM */}
+            <form className="space-y-4 p-3" onSubmit={handleLogin}>
               <div>
-                <label className="block text-lg font-medium mb-1">Email</label>
+                <label className="block text-sm font-medium mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
-                  className="w-full p-3 border rounded-md"
+                  className="w-full px-3 py-2 border rounded-xl text-sm"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -175,22 +121,32 @@ function Login() {
               </div>
 
               <div>
-                <label className="block text-lg font-medium mb-1">
+                <label className="block text-sm font-medium mb-1">
                   Password
                 </label>
                 <input
                   type="password"
-                  className="w-full p-3 border rounded-md"
+                  className="w-full px-3 py-2 border rounded-md text-sm"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
-              <br />
 
-              <button type="submit" className="login-btn">
-                Login
+              <button
+                type="submit"
+                className="login-btn flex items-center justify-center gap-2 mt-4"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></span>
+                    Please wait...
+                  </>
+                ) : (
+                  "Login"
+                )}
               </button>
             </form>
           </div>
