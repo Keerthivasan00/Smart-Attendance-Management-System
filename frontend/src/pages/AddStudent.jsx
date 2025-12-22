@@ -26,6 +26,7 @@ function AddStudent() {
     const fetchDepartments = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("department called");
 
         const response = await axios.get(
           "http://localhost:8080/manager/departments",
@@ -35,9 +36,11 @@ function AddStudent() {
             },
           }
         );
+        console.log("Departments fetched:", response.data);
         const deptData = Array.isArray(response.data)
           ? response.data
           : response.data?.data || [];
+
 
         setDepartments(deptData);
       } catch (err) {

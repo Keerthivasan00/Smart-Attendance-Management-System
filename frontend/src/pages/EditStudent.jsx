@@ -1,177 +1,10 @@
-// import React, { useState } from "react";
-// import Layout from "../components/Layout";
-
-// function EditStudent() {
-//   const [search, setSearch] = useState("");
-
-//   // Example Student Data (replace with DB data later)
-//   const students = [
-//     { id: 1, name: "Arun Kumar", reg: "CSE001", year: "III", dept: "CSE" },
-//     { id: 2, name: "Bhuvanesh", reg: "ECE102", year: "II", dept: "ECE" },
-//     { id: 3, name: "Divya", reg: "IT205", year: "I", dept: "IT" },
-//     { id: 4, name: "Suhana", reg: "EEE301", year: "IV", dept: "EEE" },
-//   ];
-
-//   const filteredStudents = students.filter((stu) =>
-//     stu.name.toLowerCase().includes(search.toLowerCase()) ||
-//     stu.reg.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   return (
-//     <>
-//     <style>
-//       {`
-//       /* Container */
-// .studentlist-container {
-//   padding: 30px;
-// }
-
-// /* Search bar */
-// .search-bar {
-//   margin: 20px 0;
-// }
-// .search-bar input {
-//   width: 100%;
-//   max-width: 450px;
-//   padding: 12px 15px;
-//   font-size: 16px;
-//   border: 1px solid #ccc;
-//   border-radius: 8px;
-//   outline: none;
-// }
-// .search-bar input:focus {
-//   border-color: #3478f6;
-// }
-
-// /* Table */
-// .table-container {
-//   margin-top: 20px;
-//   overflow-x: auto;
-// }
-
-// .styled-table {
-//   width: 100%;
-//   border-collapse: collapse;
-//   background: white;
-//   border-radius: 10px;
-//   overflow: hidden;
-//   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-// }
-
-// .styled-table th {
-//   background: #2d62ff;
-//   color: white;
-//   padding: 14px;
-//   text-align: left;
-//   font-size: 15px;
-// }
-
-// .styled-table td {
-//   padding: 14px;
-//   font-size: 15px;
-//   border-bottom: 1px solid #eee;
-// }
-
-// .styled-table tr:hover {
-//   background: #f6f8ff;
-// }
-
-// .no-data {
-//   text-align: center;
-//   padding: 20px;
-//   color: #666;
-// }
-
-// /* Edit button */
-// .edit-btn {
-//   padding: 8px 14px;
-//   background: #ff9100;
-//   color: white;
-//   border: none;
-//   border-radius: 6px;
-//   cursor: pointer;
-//   font-weight: 500;
-// }
-// .edit-btn:hover {
-//   background: #e57f00;
-// }
-//      `
-//       }
-//     </style>
-
-//     <Layout>
-//       <div className="studentlist-container">
-
-//         {/* PAGE TITLE */}
-//         <h1 className="page-title">Edit Student</h1>
-
-//         {/* SEARCH BAR */}
-//         <div className="search-bar">
-//           <input
-//             type="text"
-//             placeholder="Search by name or register number..."
-//             value={search}
-//             onChange={(e) => setSearch(e.target.value)}
-//           />
-//         </div>
-
-//         {/* STUDENT TABLE */}
-//         <div className="table-container">
-//           <table className="styled-table">
-//             <thead>
-//               <tr>
-//                 <th>S.No</th>
-//                 <th>Name</th>
-//                 <th>Register No</th>
-//                 <th>Department</th>
-//                 <th>Year</th>
-//                 <th>Edit</th>
-//               </tr>
-//             </thead>
-
-//             <tbody>
-//               {filteredStudents.length > 0 ? (
-//                 filteredStudents.map((stu, index) => (
-//                   <tr key={stu.id}>
-//                     <td>{index + 1}</td>
-//                     <td>{stu.name}</td>
-//                     <td>{stu.reg}</td>
-//                     <td>{stu.dept}</td>
-//                     <td>{stu.year}</td>
-//                     <td>
-//                       <button className="edit-btn">Edit</button>
-//                     </td>
-//                   </tr>
-//                 ))
-//               ) : (
-//                 <tr>
-//                   <td colSpan="6" className="no-data">
-//                     No students found
-//                   </td>
-//                 </tr>
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-
-//       </div>
-//     </Layout>
-//     </>
-//   );
-// }
-
-// export default EditStudent;
-
 import React, { useState } from "react";
 import Layout from "../components/Layout";
+import axios from "axios";
+import { useEffect } from "react";
 
 function EditStudent() {
-  const [studentList, setStudentList] = useState([
-    { id: 1, name: "Arun Kumar", reg: "CSE001", dept: "CSE", year: "III" },
-    { id: 2, name: "Bhuvanesh", reg: "ECE102", dept: "ECE", year: "II" },
-    { id: 3, name: "Divya", reg: "IT205", dept: "IT", year: "I" },
-    { id: 4, name: "Suhana", reg: "EEE301", dept: "EEE", year: "IV" },
-  ]);
+  const [studentList, setStudentList] = useState([]);
 
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState("");
@@ -180,7 +13,54 @@ function EditStudent() {
   const [deleteId, setDeleteId] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
+
+  const token = localStorage.getItem("token");
+const decoded = JSON.parse(atob(token.split(".")[1]));
+console.log("Decoded token:", decoded);
+
+  useEffect(() => {
+  const fetchStudents = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await axios.get(
+        "http://localhost:8080/manager/students",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // 🔑 Map backend response to UI format
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data?.data || [];
+
+      const mappedStudents = data.map((stu) => ({
+        id: stu.id,
+        name: stu.name || stu.studentName,
+        reg: stu.reg || stu.registerNumber,
+        dept: stu.dept || stu.department,
+        year: stu.year,
+      }));
+
+      setStudentList(mappedStudents);
+    } catch (err) {
+      console.error("Failed to load students", err);
+      setStudentList([]);
+    }
+  };
+
+  fetchStudents();
+}, []);
+
 
   // Filtering
   const filteredStudents = studentList.filter(
@@ -373,10 +253,17 @@ function EditStudent() {
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Register No</th>
-                <th>Department</th>
-                <th>Year</th>
-                <th>Action</th>
+    <th>DOB</th>
+    <th>Gender</th>
+    <th>Department</th>
+    <th>Year</th>
+    <th>Mobile</th>
+    <th>Email</th>
+    <th>Relation</th>
+    <th>Relation Name</th>
+    <th>Relation Mobile</th>
+    <th>Relation Address</th>
+    <th>Action</th>
               </tr>
             </thead>
 
@@ -384,9 +271,16 @@ function EditStudent() {
               {paginatedStudents.map((stu) => (
                 <tr key={stu.id}>
                   <td>{stu.name}</td>
-                  <td>{stu.reg}</td>
-                  <td>{stu.dept}</td>
-                  <td>{stu.year}</td>
+      <td>{stu.dob}</td>
+      <td>{stu.gender}</td>
+      <td>{stu.department}</td>
+      <td>{stu.year}</td>
+      <td>{stu.mobileNo}</td>
+      <td>{stu.email}</td>
+      <td>{stu.relation}</td>
+      <td>{stu.relationName}</td>
+      <td>{stu.relationMobile}</td>
+      <td>{stu.relationAddress}</td>
                   <td>
                     <button
                       className="edit-btn"

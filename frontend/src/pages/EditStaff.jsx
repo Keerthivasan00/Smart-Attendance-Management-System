@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
+import { useEffect } from "react";
 
 function EditStaff() {
   // Dummy staff data
-  const [staffList, setStaffList] = useState([
-    { id: 1, name: "Ram Kumar", email: "ram@gmail.com", dept: "Science", phone: "9876543210" },
-    { id: 2, name: "Priya R", email: "priya@gmail.com", dept: "Maths", phone: "9876512345" },
-    { id: 3, name: "Arun S", email: "arun@gmail.com", dept: "Computer Science", phone: "9003123456" },
-  ]);
+  const [staffList, setStaffList] = useState([]);
+
+useEffect(() => {
+  const data = JSON.parse(localStorage.getItem("staffList")) || [];
+  setStaffList(data);
+}, []);
 
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState("");
@@ -25,7 +27,7 @@ function EditStaff() {
   // Filter Logic
   const filteredStaff = staffList.filter(staff =>
     staff.name.toLowerCase().includes(search.toLowerCase()) &&
-    (filterDept === "" || staff.dept === filterDept)
+    (filterDept === "" || staff.department === filterDept)
   );
 
   // Pagination Logic
@@ -197,9 +199,12 @@ function EditStaff() {
 
           <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
             <option value="">All Departments</option>
-            <option value="Science">Science</option>
-            <option value="Maths">Maths</option>
-            <option value="Computer Science">Computer Science</option>
+            <option value="IT">IT</option>
+            <option value="CSE">CSE</option>
+            <option value="EEE">EEE</option>
+            <option value="ECE">ECE</option>
+            <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
           </select>
         </div>
 
@@ -209,9 +214,14 @@ function EditStaff() {
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Mobile</th>
               <th>Department</th>
-              <th>Phone</th>
-              <th>Action</th>
+              <th>Experience</th>
+              <th>Specialization</th>
+              <th>Position</th>
+              <th>Gender</th>
+              <th>Address</th>
+              <th>Actions</th>
             </tr>
           </thead>
 
@@ -220,12 +230,17 @@ function EditStaff() {
               <tr key={staff.id}>
                 <td>{staff.name}</td>
                 <td>{staff.email}</td>
-                <td>{staff.dept}</td>
+                <td>{staff.department}</td>
                 <td>{staff.phone}</td>
+                <td>{staff.experience}</td>
+                <td>{staff.specialization}</td>
+                <td>{staff.position}</td>
+                <td>{staff.gender}</td>
+                <td>{staff.address}</td>
                 <td>
                   <button
                     className="edit-btn"
-                    onClick={() => setEditData(staff)}
+                    onClick={() => setEditData({...staff})}
                   >
                     Edit
                   </button>
@@ -257,44 +272,98 @@ function EditStaff() {
 
         {/* Edit Form Popup */}
         {editData && (
-          <div className="modal">
-            <div className="modal-content">
-              <h3>Edit Staff Details</h3>
+  <div className="modal">
+    <div className="modal-content" style={{ width: "500px" }}>
+      <h3>Edit Staff</h3>
 
-              <input
-                type="text"
-                value={editData.name}
-                onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-              />
+      <input
+        placeholder="Staff Name"
+        value={editData.name}
+        onChange={(e)=>setEditData({...editData,name:e.target.value})}
+      />
 
-              <input
-                type="email"
-                value={editData.email}
-                onChange={(e) => setEditData({ ...editData, email: e.target.value })}
-              />
+      <input
+        placeholder="Email"
+        value={editData.email}
+        onChange={(e)=>setEditData({...editData,email:e.target.value})}
+      />
 
-              <select
-                value={editData.dept}
-                onChange={(e) => setEditData({ ...editData, dept: e.target.value })}
-              >
-                <option>Science</option>
-                <option>Maths</option>
-                <option>Computer Science</option>
-              </select>
+      <input
+        placeholder="Mobile Number"
+        value={editData.phone}
+        onChange={(e)=>setEditData({...editData,phone:e.target.value})}
+      />
 
-              <input
-                type="text"
-                value={editData.phone}
-                onChange={(e) => setEditData({ ...editData, phone: e.target.value })}
-              />
+      <select
+        value={editData.department}
+        onChange={(e)=>setEditData({...editData,department:e.target.value})}
+      >
+        <option value="">Select Department</option>
+        <option>CSE</option>
+        <option>IT</option>
+        <option>ECE</option>
+        <option>EEE</option>
+        <option>MECH</option>
+        <option>CIVIL</option>
+      </select>
 
-              <div className="modal-actions">
-                <button className="save-btn" onClick={handleSave}>Save</button>
-                <button className="close-btn" onClick={() => setEditData(null)}>Cancel</button>
-              </div>
-            </div>
-          </div>
-        )}
+      <input
+        placeholder="Experience"
+        value={editData.experience}
+        onChange={(e)=>setEditData({...editData,experience:e.target.value})}
+      />
+
+      <input
+        placeholder="Specialization"
+        value={editData.specialization}
+        onChange={(e)=>setEditData({...editData,specialization:e.target.value})}
+      />
+
+      <select
+        value={editData.position}
+        onChange={(e)=>setEditData({...editData,position:e.target.value})}
+      >
+        <option>HOD</option>
+        <option>Staff</option>
+      </select>
+
+      <select
+        value={editData.gender}
+        onChange={(e)=>setEditData({...editData,gender:e.target.value})}
+      >
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <textarea
+        placeholder="Address"
+        value={editData.address}
+        onChange={(e)=>setEditData({...editData,address:e.target.value})}
+      />
+
+      <div className="modal-actions">
+        <button
+          className="save-btn"
+          onClick={() => {
+            const updated = staffList.map(st =>
+              st.id === editData.id ? editData : st
+            );
+            setStaffList(updated);
+            localStorage.setItem("staffList", JSON.stringify(updated));
+            setEditData(null);
+          }}
+        >
+          Update
+        </button>
+
+        <button className="close-btn" onClick={() => setEditData(null)}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
         {/* Delete Confirmation Popup */}
         {deleteId && (
