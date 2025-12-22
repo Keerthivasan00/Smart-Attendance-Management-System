@@ -29,6 +29,7 @@ public class Staff {
     private String specialization;
     private String gender;
     private String address;
+//    private String position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
