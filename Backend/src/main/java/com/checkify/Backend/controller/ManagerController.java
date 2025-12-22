@@ -1,9 +1,6 @@
 package com.checkify.Backend.controller;
 
-import com.checkify.Backend.model.AddStaffRequest;
-import com.checkify.Backend.model.AddStudentRequest;
-import com.checkify.Backend.model.Department;
-import com.checkify.Backend.model.DepartmentResponse;
+import com.checkify.Backend.model.*;
 import com.checkify.Backend.service.DepartmentService;
 import com.checkify.Backend.service.StaffService;
 import com.checkify.Backend.service.StudentService;
@@ -44,4 +41,11 @@ public class ManagerController {
         staffService.addStaff(request);
         return new ResponseEntity<>("Staff Added Successfully",HttpStatus.OK);
     }
+
+    @GetMapping("/get-students")
+    public ResponseEntity<List<StudentResponse>> getAllStudents() {
+        List<StudentResponse> students = studentService.getAllStudent();
+        return ResponseEntity.ok(students);
+    }
+
 }

@@ -1,385 +1,366 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
-import { useEffect } from "react";
+import axios from "axios";
 
 function EditStaff() {
-  // Dummy staff data
   const [staffList, setStaffList] = useState([]);
-
-useEffect(() => {
-  const data = JSON.parse(localStorage.getItem("staffList")) || [];
-  setStaffList(data);
-}, []);
-
   const [search, setSearch] = useState("");
   const [filterDept, setFilterDept] = useState("");
 
-  // Edit Form State
   const [editData, setEditData] = useState(null);
-
-  // Delete Popup
   const [deleteId, setDeleteId] = useState(null);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Filter Logic
-  const filteredStaff = staffList.filter(staff =>
-    staff.name.toLowerCase().includes(search.toLowerCase()) &&
-    (filterDept === "" || staff.department === filterDept)
+  const token = localStorage.getItem("token");
+
+  /* ================= FETCH ALL STAFF ================= */
+  useEffect(() => {
+    fetchStaffs();
+  }, []);
+
+  const fetchStaffs = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/manager/get-staffs",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setStaffList(res.data || []);
+    } catch (err) {
+      console.error("Failed to load staff", err);
+    }
+  };
+
+  /* ================= FILTER ================= */
+  const filteredStaff = staffList.filter(
+    (st) =>
+      st.staffName.toLowerCase().includes(search.toLowerCase()) &&
+      (filterDept === "" || st.departmentName === filterDept)
   );
 
-  // Pagination Logic
+  /* ================= PAGINATION ================= */
   const lastIndex = currentPage * itemsPerPage;
   const firstIndex = lastIndex - itemsPerPage;
   const paginatedStaff = filteredStaff.slice(firstIndex, lastIndex);
-
   const totalPages = Math.ceil(filteredStaff.length / itemsPerPage);
 
-  // Handle Edit Save
-  const handleSave = () => {
-    setStaffList(staffList.map(st => (st.id === editData.id ? editData : st)));
-    setEditData(null);
+  /* ================= EDIT (FETCH BY ID) ================= */
+  const handleEdit = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/manager/get-staff/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setEditData(res.data);
+    } catch (err) {
+      console.error("Failed to fetch staff", err);
+    }
   };
 
-  // Handle Delete
-  const confirmDelete = () => {
-    setStaffList(staffList.filter(st => st.id !== deleteId));
-    setDeleteId(null);
+  /* ================= UPDATE ================= */
+  const handleUpdate = async () => {
+    try {
+      await axios.put(
+        `http://localhost:8080/manager/update-staff/${editData.id}`,
+        editData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      fetchStaffs(); // refresh list
+      setEditData(null);
+    } catch (err) {
+      console.error("Update failed", err);
+    }
+  };
+
+  /* ================= DELETE ================= */
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/manager/delete-staff/${deleteId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      fetchStaffs();
+      setDeleteId(null);
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
   };
 
   return (
     <>
-    <style>
-      {
-        `
-        .edit-staff-container {
-  padding: 20px;
-}
+      {/* ================= STYLES ================= */}
+      <style>{`
+        .edit-staff-container { padding: 20px; }
+        .top-bar { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .top-bar input, .top-bar select {
+          padding: 10px; width: 250px;
+          border: 1px solid #ccc; border-radius: 5px;
+        }
 
-.top-bar {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
+        .table-container {
+          width: 100%;
+          overflow-x: auto;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+        }
 
-.top-bar input,
-.top-bar select {
-  padding: 10px;
-  width: 250px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
+        .staff-table {
+          min-width: 1600px;
+          border-collapse: collapse;
+          background: white;
+        }
 
-/* TABLE */
-.staff-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background: white;
-}
+        .staff-table th, .staff-table td {
+          padding: 12px;
+          border-bottom: 1px solid #eee;
+          white-space: nowrap;
+        }
 
-.staff-table th,
-.staff-table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
-}
+        .staff-table th { background: #f4f4f4; }
 
-.staff-table th {
-  background: #f4f4f4;
-}
+        .edit-btn {
+          background: #007bff;
+          color: white;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 5px;
+          margin-right: 6px;
+        }
 
-.edit-btn {
-  padding: 5px 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-right: 8px;
-}
+        .delete-btn {
+          background: #dc3545;
+          color: white;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 5px;
+        }
 
-.delete-btn {
-  padding: 5px 10px;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-}
+        .pagination { margin-top: 20px; }
+        .pagination button {
+          padding: 8px 12px;
+          margin-right: 5px;
+          border: none;
+          border-radius: 5px;
+          background: #ddd;
+        }
+        .pagination .active {
+          background: #007bff;
+          color: white;
+        }
 
-/* PAGINATION */
-.pagination {
-  margin-top: 20px;
-}
+        .modal {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
 
-.pagination button {
-  padding: 8px 12px;
-  margin-right: 5px;
-  border: none;
-  background: #ddd;
-  border-radius: 5px;
-}
+        .modal-content {
+          width: 500px;
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+        }
 
-.pagination .active {
-  background: #007bff;
-  color: white;
-}
+        .modal-content input,
+        .modal-content select,
+        .modal-content textarea {
+          width: 100%;
+          padding: 10px;
+          margin-bottom: 10px;
+        }
 
-/* MODAL POPUPS */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+        .modal-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
+        }
 
-.modal-content {
-  width: 350px;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-}
+        .save-btn {
+          background: green;
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 5px;
+        }
 
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+        .close-btn {
+          background: gray;
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 5px;
+        }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
+        .delete-confirm {
+          background: #d9534f;
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 5px;
+        }
+      `}</style>
 
-.save-btn {
-  background: green;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-}
+      <Layout>
+        <div className="edit-staff-container">
+          <h2>Edit Staff</h2>
 
-.close-btn {
-  background: gray;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-}
+          {/* SEARCH + FILTER */}
+          <div className="top-bar">
+            <input
+              placeholder="Search Staff..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-.delete-confirm {
-  background: #d9534f;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-}
-        `
-      }
-    </style>
-    <Layout>
-      <div className="edit-staff-container">
-        <h2>Edit Staff</h2>
-
-        {/* Search + Filter */}
-        <div className="top-bar">
-          <input
-            type="text"
-            placeholder="Search Staff..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-
-          <select value={filterDept} onChange={(e) => setFilterDept(e.target.value)}>
-            <option value="">All Departments</option>
-            <option value="IT">IT</option>
-            <option value="CSE">CSE</option>
-            <option value="EEE">EEE</option>
-            <option value="ECE">ECE</option>
-            <option value="MECH">MECH</option>
-            <option value="CIVIL">CIVIL</option>
-          </select>
-        </div>
-
-        {/* Staff Table */}
-        <table className="staff-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Department</th>
-              <th>Experience</th>
-              <th>Specialization</th>
-              <th>Position</th>
-              <th>Gender</th>
-              <th>Address</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {paginatedStaff.map((staff) => (
-              <tr key={staff.id}>
-                <td>{staff.name}</td>
-                <td>{staff.email}</td>
-                <td>{staff.department}</td>
-                <td>{staff.phone}</td>
-                <td>{staff.experience}</td>
-                <td>{staff.specialization}</td>
-                <td>{staff.position}</td>
-                <td>{staff.gender}</td>
-                <td>{staff.address}</td>
-                <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => setEditData({...staff})}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() => setDeleteId(staff.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Pagination */}
-        <div className="pagination">
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              className={currentPage === i + 1 ? "active" : ""}
-              onClick={() => setCurrentPage(i + 1)}
+            <select
+              value={filterDept}
+              onChange={(e) => setFilterDept(e.target.value)}
             >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+              <option value="">All Departments</option>
+              <option value="CSE">CSE</option>
+              <option value="IT">IT</option>
+              <option value="ECE">ECE</option>
+              <option value="EEE">EEE</option>
+            </select>
+          </div>
 
-        {/* Edit Form Popup */}
-        {editData && (
-  <div className="modal">
-    <div className="modal-content" style={{ width: "500px" }}>
-      <h3>Edit Staff</h3>
+          {/* TABLE */}
+          <div className="table-container">
+            <table className="staff-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Department</th>
+                  <th>Experience</th>
+                  <th>Specialization</th>
+                  <th>Position</th>
+                  <th>Gender</th>
+                  <th>Address</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
 
-      <input
-        placeholder="Staff Name"
-        value={editData.name}
-        onChange={(e)=>setEditData({...editData,name:e.target.value})}
-      />
+              <tbody>
+                {paginatedStaff.map((st) => (
+                  <tr key={st.id}>
+                    <td>{st.staffName}</td>
+                    <td>{st.email}</td>
+                    <td>{st.mobileNumber}</td>
+                    <td>{st.departmentName}</td>
+                    <td>{st.experience}</td>
+                    <td>{st.specialization}</td>
+                    <td>{st.position}</td>
+                    <td>{st.gender}</td>
+                    <td>{st.address}</td>
+                    <td>
+                      <button className="edit-btn" onClick={() => handleEdit(st.id)}>
+                        Edit
+                      </button>
+                      <button className="delete-btn" onClick={() => setDeleteId(st.id)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      <input
-        placeholder="Email"
-        value={editData.email}
-        onChange={(e)=>setEditData({...editData,email:e.target.value})}
-      />
+          {/* PAGINATION */}
+          <div className="pagination">
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                className={currentPage === i + 1 ? "active" : ""}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
 
-      <input
-        placeholder="Mobile Number"
-        value={editData.phone}
-        onChange={(e)=>setEditData({...editData,phone:e.target.value})}
-      />
+          {/* EDIT MODAL */}
+          {editData && (
+            <div className="modal">
+              <div className="modal-content">
+                <h3>Edit Staff</h3>
 
-      <select
-        value={editData.department}
-        onChange={(e)=>setEditData({...editData,department:e.target.value})}
-      >
-        <option value="">Select Department</option>
-        <option>CSE</option>
-        <option>IT</option>
-        <option>ECE</option>
-        <option>EEE</option>
-        <option>MECH</option>
-        <option>CIVIL</option>
-      </select>
+                <input
+                  value={editData.staffName}
+                  onChange={(e) =>
+                    setEditData({ ...editData, staffName: e.target.value })
+                  }
+                />
 
-      <input
-        placeholder="Experience"
-        value={editData.experience}
-        onChange={(e)=>setEditData({...editData,experience:e.target.value})}
-      />
+                <input
+                  value={editData.mobileNumber}
+                  onChange={(e) =>
+                    setEditData({ ...editData, mobileNumber: e.target.value })
+                  }
+                />
 
-      <input
-        placeholder="Specialization"
-        value={editData.specialization}
-        onChange={(e)=>setEditData({...editData,specialization:e.target.value})}
-      />
+                <input
+                  value={editData.experience}
+                  onChange={(e) =>
+                    setEditData({ ...editData, experience: e.target.value })
+                  }
+                />
 
-      <select
-        value={editData.position}
-        onChange={(e)=>setEditData({...editData,position:e.target.value})}
-      >
-        <option>HOD</option>
-        <option>Staff</option>
-      </select>
+                <textarea
+                  value={editData.address}
+                  onChange={(e) =>
+                    setEditData({ ...editData, address: e.target.value })
+                  }
+                />
 
-      <select
-        value={editData.gender}
-        onChange={(e)=>setEditData({...editData,gender:e.target.value})}
-      >
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
-
-      <textarea
-        placeholder="Address"
-        value={editData.address}
-        onChange={(e)=>setEditData({...editData,address:e.target.value})}
-      />
-
-      <div className="modal-actions">
-        <button
-          className="save-btn"
-          onClick={() => {
-            const updated = staffList.map(st =>
-              st.id === editData.id ? editData : st
-            );
-            setStaffList(updated);
-            localStorage.setItem("staffList", JSON.stringify(updated));
-            setEditData(null);
-          }}
-        >
-          Update
-        </button>
-
-        <button className="close-btn" onClick={() => setEditData(null)}>
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-        {/* Delete Confirmation Popup */}
-        {deleteId && (
-          <div className="modal">
-            <div className="modal-content delete-box">
-              <p>Are you sure you want to delete this staff?</p>
-
-              <div className="modal-actions">
-                <button className="delete-confirm" onClick={confirmDelete}>Delete</button>
-                <button className="close-btn" onClick={() => setDeleteId(null)}>Cancel</button>
+                <div className="modal-actions">
+                  <button className="save-btn" onClick={handleUpdate}>
+                    Update
+                  </button>
+                  <button className="close-btn" onClick={() => setEditData(null)}>
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-    </Layout>
+          )}
+
+          {/* DELETE MODAL */}
+          {deleteId && (
+            <div className="modal">
+              <div className="modal-content">
+                <p>Are you sure you want to delete this staff?</p>
+                <div className="modal-actions">
+                  <button className="delete-confirm" onClick={confirmDelete}>
+                    Delete
+                  </button>
+                  <button className="close-btn" onClick={() => setDeleteId(null)}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </Layout>
     </>
   );
 }
