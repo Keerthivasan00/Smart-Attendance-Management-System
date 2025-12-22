@@ -80,7 +80,7 @@ function Login() {
 
         {/* RIGHT FORM */}
         <div className="md:w-1/2 w-full h-1/2 md:h-full flex items-center justify-center bg-blue-600 p-6">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm flex flex-col justify-center p-6">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm flex flex-col justify-center p-6"><br />
 
             {/* LOGO */}
             <div className="flex justify-center mb-6">
@@ -89,11 +89,11 @@ function Login() {
                 alt="logo"
                 className="h-28 w-28 rounded-full shadow-lg"
               />
-            </div>
+            </div><br />
 
-            <h3 className="text-lg font-medium text-center mb-1">
+            <h2 className="text-lg font-bold text-center mb-1">
               Welcome back to Checkify
-            </h3>
+            </h2>
             <h3 className="text-sm text-center mb-5">
               Please login to continue
             </h3>
